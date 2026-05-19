@@ -66,4 +66,5 @@ Future Improvements
 
 ---
 Author : Serhan Kırca
+
 Personal research project focused on low-level Windows system behavior and defensive security concepts.
