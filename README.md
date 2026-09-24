@@ -1,70 +1,167 @@
-Windows Low-Level Memory Analysis Prototype (C++ / MASM) = Spectre Eye
+# TRS4R3NSpectreEye
 
-Overview
-This project is a low-level Windows memory analysis prototype designed for educational and research purposes.
+## A Windows Low-Level Memory Analysis Prototype for Defensive Security Research
 
-It explores Windows Internals using C++ and MASM by leveraging native system calls to analyze process memory behavior and virtual memory structures.
+**TRS4R3NSpectreEye** is an independent cybersecurity research and development project focused on investigating Windows process memory behavior, native system-call mechanisms, and memory-based indicators of suspicious execution.
 
-The goal is to understand how modern Windows systems manage processes, memory regions, and execution contexts from a defensive research perspective.
+The project combines **C++**, **x64 MASM**, and **Windows Native APIs/system-call interfaces** to explore how low-level process and virtual-memory information can be collected and analyzed from a defensive security perspective.
 
-Features
-- Enumeration of system processes using native system interfaces
-- Scanning of virtual memory regions within target processes
-- Detection of executable and private memory allocations
-- Identification of suspicious PE (MZ header) signatures in memory
-- Heuristic detection of anomalous executable memory regions (e.g., RWX allocations)
-
-Architecture
-The project is built in a layered structure:
-
-C++ Application Layer  
-↓  
-MASM-Based System Call Interface  
-↓  
-Windows Native System Services  
-
-This separation allows low-level interaction with Windows internals while maintaining a structured application design.
-<img width="1042" height="540" alt="2" src="https://github.com/user-attachments/assets/4416be17-03a4-4a2f-a976-b415e0c31399" />
-TRS4R3N Spectre Eye Startup Screen(Console)
-
-<img width="2466" height="791" alt="Screenshot 2026-05-19 114245" src="https://github.com/user-attachments/assets/97a31df0-1340-42d5-820b-7ad9a3eea7dc" />
-TRS4R3N Spectre Eye Software Tested with shellcode
-
-Key Concepts Used
-- Windows Internals
-- Virtual Memory Management
-- Native API / System Calls
-- Process Memory Analysis
-- Defensive Security Research Techniques
-- x64 Assembly Integration (MASM)
-
-Purpose
-The purpose of this project is purely educational.
-It is intended to improve understanding of:
-- How Windows handles process memory
-- How system calls operate at a low level
-- How memory regions can be analyzed for anomalies
-- How modern defensive tools inspect runtime behavior
-
-Disclaimer
-This project is developed strictly for educational and research purposes.
-It is not intended for malicious use, exploitation, or unauthorized system access.
-
-Notes
-This project was developed as part of a personal study on:
-- Windows Internals
-- Low-level system programming
-- Memory analysis techniques
-- Syscall-based execution models
-
-Future Improvements
-- Enhanced memory forensics capabilities
-- Thread and stack analysis
-- ETW-based telemetry integration
-- PE structure deep parsing
-- Improved heuristic detection models
+The primary objective is not to develop an offensive exploitation framework, but to improve the understanding of Windows Internals and investigate how low-level memory characteristics can contribute to defensive detection and endpoint security research.
 
 ---
-Author : Serhan Kırca
 
-Personal research project focused on low-level Windows system behavior and defensive security concepts.
+## Research Motivation
+
+Modern endpoint security mechanisms operate across multiple layers of the operating system, including process execution, memory management, system calls, and telemetry collection.
+
+This project investigates the following research questions:
+
+1. How can Windows process and virtual-memory structures be inspected at a low level?
+2. Which characteristics of private executable memory regions may indicate anomalous execution?
+3. How can native system-call interfaces be integrated into a defensive memory-analysis prototype?
+4. How can memory-based indicators complement conventional endpoint telemetry?
+5. What limitations arise when attempting to identify suspicious runtime memory behavior using heuristic analysis?
+
+---
+
+## System Architecture
+
+```text
+┌─────────────────────────────────────┐
+│        C++ Analysis Layer           │
+│                                     │
+│ Process Enumeration                 │
+│ Memory Region Analysis               │
+│ Heuristic Detection                 │
+└──────────────────┬──────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────┐
+│       x64 MASM Syscall Layer        │
+│                                     │
+│ Dynamic Syscall Interface           │
+│ Native System Service Invocation    │
+└──────────────────┬──────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────┐
+│     Windows Native System Services  │
+│                                     │
+│ Process Management                  │
+│ Virtual Memory                      │
+│ System Information                  │
+└─────────────────────────────────────┘
+```
+
+---
+
+## Core Components
+
+### 1. Process Analysis
+
+The prototype enumerates running processes and establishes the necessary process handles for defensive memory inspection.
+
+### 2. Virtual Memory Analysis
+
+The system queries virtual-memory regions within target processes and examines characteristics including:
+
+* Memory state
+* Memory type
+* Protection attributes
+* Allocation boundaries
+* Executable/private memory regions
+
+### 3. Memory-Based Heuristics
+
+The prototype investigates suspicious memory characteristics such as:
+
+* Private executable memory
+* `PAGE_EXECUTE_READWRITE` regions
+* Executable memory containing PE `MZ` signatures
+* Executable private regions without an expected PE header
+
+These indicators are treated as **heuristic signals rather than definitive malware classifications**.
+
+### 4. Native System-Call Interface
+
+The project implements a low-level syscall layer in x64 MASM for selected Windows Native APIs.
+
+The current implementation includes interfaces for:
+
+```text
+NtOpenProcess
+NtReadVirtualMemory
+NtQueryVirtualMemory
+NtQuerySystemInformation
+NtQueryInformationThread
+```
+
+The syscall layer allows the project to investigate the relationship between high-level Windows interfaces and lower-level system-call execution.
+
+---
+
+## Defensive Security Perspective
+
+Memory-based analysis can provide information that is not always directly observable through conventional file-based inspection.
+
+The project therefore investigates the potential value of runtime memory characteristics as complementary endpoint security telemetry.
+
+The current prototype should be considered an **experimental research implementation** rather than a production EDR or malware-detection platform.
+
+---
+
+## Research Relevance
+
+TRS4R3NSpectreEye contributes to my broader research interests in:
+
+* Windows Internals
+* Endpoint Security
+* Memory Forensics
+* Malware Analysis
+* Detection Engineering
+* EDR Architecture
+* System-Level Security
+* Low-Level Security Programming
+
+The project is also intended to serve as a foundation for future experimental work involving:
+
+* ETW-based telemetry
+* Thread and stack analysis
+* PE structure analysis
+* Extended memory-forensics techniques
+* Improved anomaly-detection heuristics
+* Correlation of memory telemetry with process and system events
+
+---
+
+## Limitations
+
+The current implementation is a research prototype and has several limitations.
+
+The heuristic indicators do not constitute definitive malware classification. Legitimate software may allocate executable memory, and suspicious memory characteristics may require additional contextual information before a security conclusion can be made.
+
+Future versions will investigate richer telemetry sources and multi-dimensional analysis to reduce false positives.
+
+---
+
+## Educational and Research Purpose
+
+This project was developed for educational and research purposes to investigate Windows Internals, low-level system programming, process memory behavior, and defensive security analysis.
+
+It is not intended for unauthorized access, exploitation, or malicious activity.
+
+---
+
+## Author
+
+**Serhan Kırca**
+
+Cybersecurity Research & Development
+
+GitHub: https://github.com/serhankirca
+
+---
+
+## License
+
+Apache License 2.0
