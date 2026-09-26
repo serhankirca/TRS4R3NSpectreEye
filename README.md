@@ -104,7 +104,11 @@ Phase 4 ML Heuristics: Anomaly classifier trained on memory telemetry datasets
 Phase 5 KMD / Full HIDS: Kernel-mode driver,ring-0 telemetry pipeline
 
 License:Apache 2.0
+
 Author: Serhan Kırca
+
 LinkedIN:serhankirca
+
 YouTube:@SerhanKırca
+
 Medium:serhankirca
